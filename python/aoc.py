@@ -48,7 +48,7 @@ class AOC:
         todaysFilename = "day" + format(localtime.tm_mday, IOFILE_DAYFORMAT) + ".py"
 
         if(os.path.exists(todaysFilename)):
-            print("Todays script does already exist.")
+            print("Today's script does already exist.")
         else:
             f = open(todaysFilename, "w")
             f.write(templateContent)
@@ -61,10 +61,22 @@ class AOC:
         try:
             data = cls.getWebsiteData(url)
             cls.__saveTodaysInputToFile(data)
+            print("Saved input!")
         except urllib.error.HTTPError as e:
             print("Failed to get today's input...")
             print(e)
-            input("Press Enter to exit")
+            localtime = time.localtime()
+            if (localtime.tm_hour == 5):
+                diff = (59 - localtime.tm_min) * 60 + (60 - localtime.tm_sec)
+                print("Will try again in " + str(diff) + " seconds")
+                time.sleep(diff)
+                cls.saveTodaysInputToFile()
+            elif (localtime.tm_hour == 6):
+                print("Will try again in 1 second...")
+                time.sleep(1)
+                cls.saveTodaysInputToFile()
+            else:
+                input("Press Enter to exit")
 
     @classmethod
     def getTodaysInputUrl(cls):
