@@ -17,7 +17,7 @@ session=5485cc9b3365b4305dfb4e8337e0a598a574f8242bf17289e0dd6c20a3cd44a089de16ab
 ```
 
 # Leaderboard
-In folder _python_ you will find _\_leaderbord.py which is a little script to display your local leaderbord.
+In folder _python_ you will find _\_leaderbord.py_ which is a little script to display your local leaderbord.
 It displays the time everyone needed to solve the tasks (strictly speaking, it shows the time; time zone UTC+1).
 
 It will fetch all data from [adventofcode.com](https://adventofcode.com) and create a local HTML file which is then opened in your browser.
@@ -29,5 +29,5 @@ You need to provide the desired year and the user ID of the leaderboard owner (y
 ```
 
 You may are also interested in:\
-https://addons.mozilla.org/en-US/firefox/addon/aoc-ranking/\
+https://addons.mozilla.org/en-US/firefox/addon/aoc-ranking/ \
 https://addons.mozilla.org/en-US/firefox/addon/advent-of-code-charts/
