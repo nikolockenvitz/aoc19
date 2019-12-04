@@ -1,8 +1,13 @@
 # Input- and Output-files
 input/
 output/
+
+# Authentification Cookies
 cookies.txt
-_leaderboard.*
+
+# Leaderboard Configuration and Output
+leaderboard.txt
+python/_leaderboard.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
