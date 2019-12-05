@@ -11,87 +11,77 @@ POSITION_MODE = 0
 IMMEDIATE_MODE = 1
 
 # Input
-p = [int(n) for n in aoc.getFile().split(",")]
+p = [IntcodeInteger(n) for n in aoc.getFile().split(",")]
 
 # Implementation
-def intcodeComputer(p, inputVal):
+numberOfParametersPerOpcode = {
+    1: 3, # add
+    2: 3, # multiply
+    3: 1, # input
+    4: 1, # output
+    5: 2, # jump-if-true
+    6: 2, # jump-if-false
+    7: 3, # less than
+    8: 3, # equals
+    99: 0, # halt
+}
+
+def intcodeComputer(program, inputVal):
     ip = 0
     output = 0
     while(1):
-        opcode = p[ip]%100
-        parametermodes = []
-        for i in range(3): # 3 = current max number of parameters
-            parametermodes.append((p[ip]%(10**(i+3))//(10**(i+2))))
+        instruction = program[ip].get()
+        opcode = instruction%100
 
-        #print(ip, p[ip], opcode, parametermodes)
+        if (opcode not in numberOfParametersPerOpcode):
+            print("unknown opcode")
+            break
 
+        # parameters
+        params = []
+        for i in range(numberOfParametersPerOpcode[opcode]):
+            mode = (program[ip].get()%(10**(i+3))//(10**(i+2)))
+
+            if (mode == POSITION_MODE):
+                params.append(program[program[ip+i+1].get()])
+            elif (mode == IMMEDIATE_MODE):
+                params.append(program[ip+i+1])
+            else:
+                print("unknown mode")
+
+        ipset = False
         if (opcode == 1): #add
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
-
-            p[p[ip+3]] = p1 + p2
-            ip += 4
+            params[2].set(params[0].get() + params[1].get())
         elif (opcode == 2): #multiply
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
-
-            p[p[ip+3]] = p1 * p2
-            ip += 4
+            params[2].set(params[0].get() * params[1].get())
         elif (opcode == 3): #input
-            p[p[ip+1]] = inputVal
-            ip += 2
+            params[0].set(inputVal)
         elif (opcode == 4): #output
-            output = p[p[ip+1]]
-            #print("output", output)
-            ip += 2
+            output = params[0].get()
         elif (opcode == 5): #jump-if-true
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
-
-            if (p1 != 0): ip = p2
-            else: ip += 3
+            if (params[0].get() != 0):
+                ip = params[1].get()
+                ipset = True
         elif (opcode == 6): #jump-if-false
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
-
-            if (p1 == 0): ip = p2
-            else: ip += 3
+            if (params[0].get() == 0):
+                ip = params[1].get()
+                ipset = True
         elif (opcode == 7): #less-than
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
-
-            p[p[ip+3]] = 1 if p1 < p2 else 0
-            ip += 4
+            params[2].set(1 if params[0].get() < params[1].get() else 0)
         elif (opcode == 8): #equals
-            p1 = p[ip+1]
-            if (parametermodes[0] == POSITION_MODE): p1 = p[p1]
-            p2 = p[ip+2]
-            if (parametermodes[1] == POSITION_MODE): p2 = p[p2]
+            params[2].set(1 if params[0].get() == params[1].get() else 0)
+        elif (opcode == 99): #halt
+            break
 
-            p[p[ip+3]] = 1 if p1 == p2 else 0
-            ip += 4
-        elif (opcode == 99): #stop
-            break
-        else:
-            print("wrong opcode", opcode)
-            break
+        if (not ipset):
+            ip += numberOfParametersPerOpcode[opcode] + 1
     return output
 
 def part1():
-    return intcodeComputer(aoc.copyList(p), 1)
+    return intcodeComputer(copyIntcodeProgram(p), 1)
 
 def part2():
-    return intcodeComputer(aoc.copyList(p), 5)
+    return intcodeComputer(copyIntcodeProgram(p), 5)
 
 # Processing
 result1 = part1()
