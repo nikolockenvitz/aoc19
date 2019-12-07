@@ -9,6 +9,10 @@ cookies.txt
 leaderboard.txt
 python/_leaderboard.html
 
+# Opening File for Current Day Automatically
+python/_start.bat
+config.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

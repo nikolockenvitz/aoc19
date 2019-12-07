@@ -6,6 +6,7 @@ IOFILE_DAYFORMAT = "02d"
 IOFILE_SUFFIX = ".txt"
 
 PATH_COOKIES = "../cookies.txt"
+PATH_CONFIG = "../config.txt"
 
 import hashlib
 import sys
@@ -39,13 +40,17 @@ class AOC:
         return firstNumber
 
     @classmethod
+    def getTodaysPythonScriptFilename(cls):
+        localtime = time.localtime()
+        return "day" + format(localtime.tm_mday, IOFILE_DAYFORMAT) + ".py"
+
+    @classmethod
     def createTodaysPythonScript(cls):
         f = open("day00.py", "r")
         templateContent = f.read()
         f.close()
 
-        localtime = time.localtime()
-        todaysFilename = "day" + format(localtime.tm_mday, IOFILE_DAYFORMAT) + ".py"
+        todaysFilename = cls.getTodaysPythonScriptFilename()
 
         if(os.path.exists(todaysFilename)):
             print("Today's script does already exist.")
@@ -53,6 +58,27 @@ class AOC:
             f = open(todaysFilename, "w")
             f.write(templateContent)
             f.close()
+
+    @classmethod
+    def openTodaysPythonScript(cls):
+        todaysFilename = cls.getTodaysPythonScriptFilename()
+
+        try:
+            f = open(PATH_CONFIG, "r")
+            pythonPath = f.read()
+            f.close()
+        except:
+            pythonPath = sys.executable
+
+        command = 'START "" "{python}" -m idlelib "{file}" {file}'
+        command = command.format(python=pythonPath, file=todaysFilename)
+
+        filename = "_start.bat"
+        f = open(filename, "w")
+        f.write(command)
+        f.close()
+
+        os.system(filename)
 
     @classmethod
     def saveTodaysInputToFile(cls):
@@ -190,4 +216,5 @@ class IntcodeInteger:
 
 if __name__ == "__main__":
     AOC.createTodaysPythonScript()
+    AOC.openTodaysPythonScript()
     AOC.saveTodaysInputToFile()

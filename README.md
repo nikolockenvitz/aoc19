@@ -8,7 +8,7 @@ Each programming language has it's own folder for implementation (currently only
 
 # Python
 The class _AOC_ in _aoc.py_ implements some general functionality and can be used in the specific implementations.
-It will also create (based on the template _day00.py_) a script for each day with basic implementation (getting input, save results, ...).
+It will also create (based on the template _day00.py_) a script for each day with basic implementation (getting input, save results, ...) and open this in IDLE.
 The daily puzzle input will be fetched from [adventofcode.com](https://adventofcode.com/2019) and saved to the corresponding file in _input_.
 Therefor credentials (cookies) are stored in file _cookies.txt_ to authenticate to Advent of Code and get personal puzzle input.
 The content of the file _cookies.txt_ in main directory looks like this:
