@@ -195,24 +195,6 @@ class AOC:
             newList.append(element)
         return newList
 
-def copyIntcodeProgram(program):
-    newProgram = []
-    for el in program:
-        newProgram.append(IntcodeInteger(el.get()))
-    return newProgram
-
-class IntcodeInteger:
-    def __init__(self, value):
-        self.value = int(value)
-
-    def get(self):
-        return self.value
-
-    def set(self, value):
-        self.value = value
-
-    def __repr__(self):
-        return "Intcode Integer: " + str(self.value)
 
 if __name__ == "__main__":
     AOC.createTodaysPythonScript()

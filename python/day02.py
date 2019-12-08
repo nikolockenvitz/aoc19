@@ -1,5 +1,6 @@
 # Import and Setup
 from aoc import *
+from _intcode import *
 DAY = AOC.getDayFromFilepath(__file__)
 aoc = AOC(DAY)
 
@@ -8,31 +9,15 @@ result1 = None
 result2 = None
 
 # Input
-file = aoc.getFile()
-
-f = [int(x) for x in file.split(",")]
+p = createIntcodeProgramFromFile(aoc.getFile())
 
 # Implementation
 def part1(noun=12, verb=2):
-    numbers = aoc.copyList(f)
-    numbers[1] = noun
-    numbers[2] = verb
-
-    result = 0
-    ix = 0
-    while(1):
-        if (numbers[ix] == 1):
-            numbers[numbers[ix+3]] = numbers[numbers[ix+1]] + numbers[numbers[ix+2]]
-        elif (numbers[ix] == 2):
-            numbers[numbers[ix+3]] = numbers[numbers[ix+1]] * numbers[numbers[ix+2]]
-        elif (numbers[ix] == 99):
-            break
-        else:
-            print("err")
-            break
-        ix += 4
-    result = numbers[0]
-    return result
+    c = IntcodeComputer(p)
+    c.replaceValue(1, noun)
+    c.replaceValue(2, verb)
+    c.run()
+    return c.program[0].get()
 
 t = 19690720
 def part2():

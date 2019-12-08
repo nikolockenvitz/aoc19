@@ -1,5 +1,6 @@
 # Import and Setup
 from aoc import *
+#from _intcode import *
 DAY = AOC.getDayFromFilepath(__file__)
 aoc = AOC(DAY)
 
