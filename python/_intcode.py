@@ -2,6 +2,7 @@
 
 POSITION_MODE  = 0
 IMMEDIATE_MODE = 1
+RELATIVE_MODE  = 2
 
 numberOfParametersPerOpcode = {
     1: 3, # add
@@ -12,6 +13,7 @@ numberOfParametersPerOpcode = {
     6: 2, # jump-if-false
     7: 3, # less than
     8: 3, # equals
+    9: 1, # adjust relative base
     99: 0, # halt
 }
 
@@ -39,7 +41,11 @@ class IntcodeInteger:
 
 class IntcodeComputer:
     def __init__(self, program, inputValues=[]):
-        self.program = copyIntcodeProgram(program)
+        self.program = {}
+        copy = copyIntcodeProgram(program)
+        for n in range(len(copy)):
+            self.program[n] = copy[n]
+        
         if(type(inputValues) == int):
             self.inputValues = [inputValues]
         else:
@@ -49,6 +55,7 @@ class IntcodeComputer:
         self.ip = 0
         self.output = 0
         self.inputIndex = 0
+        self.relativeBase = 0
         self.halted = False
 
     def replaceValue(self, address, value):
@@ -70,7 +77,7 @@ class IntcodeComputer:
         opcode = instruction%100
 
         if (opcode not in numberOfParametersPerOpcode):
-            print("unknown opcode")
+            print("unknown opcode", opcode)
             return
 
         # parameters
@@ -78,10 +85,21 @@ class IntcodeComputer:
         for i in range(numberOfParametersPerOpcode[opcode]):
             mode = (self.program[self.ip].get()%(10**(i+3))//(10**(i+2)))
 
+            if ((self.ip+i+1) not in self.program):
+                self.program[self.ip+i+1] = IntcodeInteger(0)
+
             if (mode == POSITION_MODE):
-                params.append(self.program[self.program[self.ip+i+1].get()])
+                pos = self.program[self.ip+i+1].get()
+                if (pos not in self.program):
+                    self.program[pos] = IntcodeInteger(0)
+                params.append(self.program[pos])
             elif (mode == IMMEDIATE_MODE):
                 params.append(self.program[self.ip+i+1])
+            elif (mode == RELATIVE_MODE):
+                pos = self.relativeBase + self.program[self.ip+i+1].get()
+                if (pos not in self.program):
+                    self.program[pos] = IntcodeInteger(0)
+                params.append(self.program[pos])
             else:
                 print("unknown mode")
 
@@ -111,6 +129,8 @@ class IntcodeComputer:
             params[2].set(1 if params[0].get() < params[1].get() else 0)
         elif (opcode == 8): #equals
             params[2].set(1 if params[0].get() == params[1].get() else 0)
+        elif (opcode == 9): #adjust relative base
+            self.relativeBase += params[0].get()
         elif (opcode == 99): #halt
             self.halted = True
             return
