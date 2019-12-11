@@ -40,20 +40,24 @@ class IntcodeInteger:
         return "Intcode Integer: " + str(self.value)
 
 class IntcodeComputer:
-    def __init__(self, program, inputValues=[]):
+    def __init__(self, program, inputValues=None):
         self.program = {}
         copy = copyIntcodeProgram(program)
         for n in range(len(copy)):
             self.program[n] = copy[n]
-        
-        if(type(inputValues) == int):
+
+        if(inputValues == None):
+            self.inputValues = []
+        elif(type(inputValues) == int):
             self.inputValues = [inputValues]
         else:
             self.inputValues = inputValues
+
         self.outputIntcodeComputers = []
-        
+
         self.ip = 0
         self.output = 0
+        self.outputs = []
         self.inputIndex = 0
         self.relativeBase = 0
         self.halted = False
@@ -115,6 +119,7 @@ class IntcodeComputer:
             self.inputIndex-=-1
         elif (opcode == 4): #output
             self.output = params[0].get()
+            self.outputs.append(self.output)
             for outputIntcodeComputer in self.outputIntcodeComputers:
                 outputIntcodeComputer.addInput(self.output)
         elif (opcode == 5): #jump-if-true
