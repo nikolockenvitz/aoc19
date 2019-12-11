@@ -93,13 +93,13 @@ def part2():
             for a in asteroidPositions:
                 if(degrees[a] == theta and not isAsteroidBetween(pos, a)):
                     destroyedAsteroids-=-1
-                    if(destroyedAsteroids == 299):
+                    if(destroyedAsteroids == 200):
                         return 100*a[0] + a[1]
                     oldTheta = theta
                     del d[a]
                     del degrees[a]
                     break
-    
+
 
 # Processing
 result1 = part1()

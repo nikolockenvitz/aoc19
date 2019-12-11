@@ -18,7 +18,6 @@ def checkPassword(pw):
     double1, double2 = False, False
     for i in range(5):
         if(pw[i] == pw[i+1]):
-            "?XX???"
             double1 = True
             if(i+2<6 and pw[i+2] == pw[i]):
                 pass
