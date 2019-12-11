@@ -23,7 +23,7 @@ def paint(startingColor=0):
             inp = 0
         c.addInput(inp)
         while(not c.halted and len(c.outputs) < 2):
-            c.runInstruction(startingColor*0)
+            c.runInstruction()
         if(len(c.outputs) < 2 and c.halted):
             break
         d[(x,y)] = c.outputs[0]
