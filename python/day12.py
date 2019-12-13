@@ -63,19 +63,43 @@ def getTotalEnergy():
         totalEnergy += pot*kin
     return totalEnergy
 
-def part1():
-    for i in range(1000):
+def gcd(a,b):
+    while(b):
+        a,b=b,a%b
+    return a
+
+def lcm(a,b):
+    return a*b//gcd(a,b)
+
+def part1n2():
+    result1, result2 = 0, 0
+
+    ix = (moons[0].px, moons[0].vx, moons[1].px, moons[1].vx, moons[2].px, moons[2].vx, moons[3].px, moons[3].vx)
+    iy = (moons[0].py, moons[0].vy, moons[1].py, moons[1].vy, moons[2].py, moons[2].vy, moons[3].py, moons[3].vy)
+    iz = (moons[0].pz, moons[0].vz, moons[1].pz, moons[1].vz, moons[2].pz, moons[2].vz, moons[3].pz, moons[3].vz)
+    rx,ry,rz = 0,0,0
+
+    i = 0
+    while(1):
+        if (rx == 0 and ix == (moons[0].px, moons[0].vx, moons[1].px, moons[1].vx, moons[2].px, moons[2].vx, moons[3].px, moons[3].vx)):
+            rx = i
+        if (ry == 0 and iy == (moons[0].py, moons[0].vy, moons[1].py, moons[1].vy, moons[2].py, moons[2].vy, moons[3].py, moons[3].vy)):
+            ry = i
+        if (rz == 0 and iz == (moons[0].pz, moons[0].vz, moons[1].pz, moons[1].vz, moons[2].pz, moons[2].vz, moons[3].pz, moons[3].vz)):
+            rz = i
+        if (rx != 0 and ry != 0 and rz != 0):
+            result2 = lcm(lcm(rx,ry),rz)
+            break
         applyGravity()
         applyVelocity()
-    return getTotalEnergy()
+        i += 1
+        if (i == 1000):
+            result1 = getTotalEnergy()
 
-def part2():
-    result = 0
-    return result
+    return [result1, result2]
 
 # Processing
-result1 = part1()
-result2 = part2()
+[result1, result2] = part1n2()
 
 # Output
 aoc.output(result1, result2)
