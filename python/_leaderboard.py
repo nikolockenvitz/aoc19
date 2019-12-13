@@ -73,6 +73,9 @@ for attr in ["Local Score", "Global Score", "Stars"]:
     html += "</tr>"
     h += 1
 
+html += "{WINS}"
+wins = [0]*len(members)
+
 for day in range(1,26):
     for part in [1,2]:
         html += "<tr><td>"
@@ -93,6 +96,7 @@ for day in range(1,26):
             else:
                 if(refts == None or refts == ts):
                     style = "background-color:#0f0;font-weight:bold;"
+                    wins[i] += 1
                 else:
                     style = "background-color:#f00;color:#fff;"
                 html += "<td style=\"{}\">".format(style)
@@ -108,6 +112,12 @@ for day in range(1,26):
         html += "</tr>"
 
 html += "</table></body></html>"
+
+hw = "<tr><td>Wins</td>"
+for w in wins:
+    hw += "<td>" + str(w) + "</td>"
+hw += "</tr>"
+html = html.replace("{WINS}", hw)
 
 filename = "_leaderboard.html"
 f = open(filename,"w")
